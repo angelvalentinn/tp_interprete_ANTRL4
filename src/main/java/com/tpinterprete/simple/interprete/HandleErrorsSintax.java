@@ -15,13 +15,13 @@ public class HandleErrorsSintax extends BaseErrorListener { //Implemento mi prop
         String mymsg = msg;
 
         if(mymsg.contains("token recognition error")) {
-            mymsg = "La sintaxis es invalida, token no reconocido.";
+            mymsg = "Sintaxis invalida, token no reconocido.";
         } else if(mymsg.contains("extraneous input")) {
-            mymsg = "La sintaxis es invalida, entrada incorrecta o inesperada";
+            mymsg = "Sintaxis invalida, entrada incorrecta o inesperada";
         } else if(mymsg.contains("mismatched input")) {
-            mymsg = "La sintaxis es invalida, sintaxis o simbolo incompatible";
+            mymsg = "Sintaxis invalida, sintaxis o simbolo incompatible";
         } else if(mymsg.contains("missing")) {
-            mymsg = "La sintaxis es invalida, falta un elemento obligatorio.";
+            mymsg = "Sintaxis invalida, falta un elemento obligatorio.";
         }
 
         throw new ParseCancellationException("[Linea: " + line + "] " + "ERROR: " + mymsg);

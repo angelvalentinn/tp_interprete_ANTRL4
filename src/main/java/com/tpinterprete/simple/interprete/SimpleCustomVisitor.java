@@ -57,6 +57,39 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
         return null;
     }
 
+    @Override
+    public Object visitConditional(SimpleParser.ConditionalContext ctx) {
+
+        Object conditionObj = visit(ctx.expression());
+        Boolean condition;
+
+        if(conditionObj.toString().equals("verdadero")) condition = true;
+        else if (conditionObj.toString().equals("falso")) condition = false;
+        else {
+            throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
+                    "ERROR: Operación invalida, el condicional debe resultar en verdadero o falso.");
+        }
+
+        Integer tam = ctx.if_block().sentence().size();
+
+        if(condition) {
+
+            for(int i=0; i<tam; i++) {
+                visit( ctx.if_block().sentence(i) );
+            }
+
+        } else {
+
+            for(int i=0; i<tam; i++) {
+                visit( ctx.else_block().sentence(i) );
+            }
+
+        }
+
+        return null;
+
+    }
+
 
     @Override
     public Object visitId(SimpleParser.IdContext ctx) {

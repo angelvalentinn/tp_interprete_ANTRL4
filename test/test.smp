@@ -1,33 +1,45 @@
 programa central {
 
-	variable x;
-	variable s;
+    variable x;
+
+    x=(3+2)*2;
+
+    si(verdadero && falso) {
+        mostrar (x);
+        mostrar (2);
+    } sino {
+        mostrar (6);
+        mostrar (7);
+    };
+
+	//variable x;
+	//variable s;
 
     //Esto es un comentario ignorado por el interprete
 
-	x = (2+1)*3;
-    s = 2;
+	//x = (2+1)*3;
+    //s = 2;
 
-	mostrar ( x / s);
-	mostrar ( x + 1 );
-	mostrar ( "soy Un Literal :]" );
-	mostrar ( 2+6/2 );
+	//mostrar ( x / s);
+	//mostrar ( x + 1 );
+	//mostrar ( "soy Un Literal :]" );
+	//mostrar ( 2+6/2 );
 
-	mostrar (verdadero && falso);
-	mostrar (verdadero && verdadero);
+	//mostrar (verdadero && falso);
+	//mostrar (verdadero && verdadero);
 
-	mostrar (falso || falso);
-	mostrar (falso || verdadero);
-	mostrar (verdadero || falso && falso);
+	//mostrar (falso || falso);
+	//mostrar (falso || verdadero);
+	//mostrar (verdadero || falso && falso);
 
-	mostrar (5/2);
-	mostrar (5.1 * 2);
-	mostrar (2 * 5);
-	mostrar (4.4 - 3);
-	mostrar (2 - 10.2);
+	//mostrar (5/2);
+	//mostrar (5.1 * 2);
+	//mostrar (2 * 5);
+	//mostrar (4.4 - 3);
+	//mostrar (2 - 10.2);
     //mostrar p; //Lanza error variable sin declarar
-	mostrar (6 < 4);
-	mostrar (2.3 == 2.1);
+	//mostrar (6 < 4);
+	//mostrar (2.3 == 2.1);
 
 	//mostrar(falso && 2); //Lanza error de incompatibilidad de tipos
 	//mostrar(verdadero > 2); //Lanza error de incompatibilidad de tipos

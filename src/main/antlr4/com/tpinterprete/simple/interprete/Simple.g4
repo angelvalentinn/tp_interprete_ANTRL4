@@ -1,13 +1,18 @@
 grammar Simple;
 
-//------------- Gramatica libre de contexto (VT, VN, S, P) -------------
+//------------- Gramatica libre de contexto (VT, S, P) -------------
 
 program: PROGRAM ID BRACKET_OPEN sentence* BRACKET_CLOSE; //Nuestro simbolo inicial
-sentence: var_decl | var_assign | print;
+sentence: var_decl | var_assign | print | conditional;
 var_decl: VAR ID SEMICOLON;
 var_assign: ID ASSIGN expression SEMICOLON;
 print: PRINT expression SEMICOLON;
 number: INTEGER | FLOATING;
+conditional: IF PAR_OPEN expression PAR_CLOSE
+    BRACKET_OPEN if_block BRACKET_CLOSE
+    ELSE  BRACKET_OPEN else_block BRACKET_CLOSE SEMICOLON?;
+if_block: sentence*;
+else_block: sentence*;
 
 expression : expression op=(MULT | DIV) expression   # MulDiv //Esta manera respeta la presedencia matematica, dejando que la mult/div
            | expression op=(PLUS | MINUS) expression # AddSub //quede en los niveles mas bajos del arbol asegurando que se operen primero

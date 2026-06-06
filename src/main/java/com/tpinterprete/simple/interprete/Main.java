@@ -19,7 +19,7 @@ public class Main {
 		CommonTokenStream tokens = new CommonTokenStream(lexer); //Se toman los tokens y se pasan al Analizador Sintactico
 		SimpleParser parser = new SimpleParser(tokens); //Implementa el Analizador Sintactico
 
-		//Borro el manejador de errores nativo e instancio el mio propio, asi manejo los errores
+		//Borro el manejador de errores nativo y uso el mio propio, asi manejo los errores
 		//lexicos y sintacticos en español
 		lexer.removeErrorListeners();
 		lexer.addErrorListener(HandleErrorsSintax.INSTANCE);
