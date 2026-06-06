@@ -61,6 +61,7 @@ PAR_OPEN: '(';
 SEMICOLON: ';';
 
 COMMENT : '//' ~[\r\n]* -> skip; // "~" quiere decir NOT, entonces en esa cadena se acepta cualquier cosa mientras no sea saltos de linea
+COMMENTLM: '/*' .*? '*/' -> skip;
 
 FLOATING: [0-9]+ '.' [0-9]+;
 INTEGER: [0-9]+; // El signo positivo indica que puede estar 1 o N veces
