@@ -96,23 +96,33 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
         //Este metodo se ejecuta se quiere multiplicar/dividir expresiones, en caso de que las expresiones sean otras
         //expresiones, se visita recursivamente hasta obtener el terminal numero, luego se opera
 
-        Number left = (Number) visit(ctx.expression(0)); //Si el valor que viene es Double, Number lo instancia como Double, sino Integer
-        Number right = (Number) visit(ctx.expression(1)); //Integer y Double heredan de Number
+        Object left = visit(ctx.expression(0));
+        Object right = visit(ctx.expression(1));
 
-        if(right.doubleValue() == 0.0) throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
-                "ERROR: Operación invalida, no se puede dividir por 0.");
+        if( !(left instanceof Integer || left instanceof Double)
+            ||!(right instanceof Integer || right instanceof Double)
+        )
+            throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
+                    "ERROR: Operación invalida, los operandos deben ser numericos.");
+
+        Number leftNumber = (Number) left;
+        Number rightNumber = (Number) right;
+
+        if(rightNumber.doubleValue() == 0.0) throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
+                "ERROR: Operación invalida, no se puede dividir por 0 o nulo.");
+
 
         if(ctx.op.getType() == SimpleParser.DIV) {
 
-            return left.doubleValue() / right.doubleValue();
+            return leftNumber.doubleValue() / rightNumber.doubleValue();
 
-        } else if(left instanceof Double || right instanceof Double) {
+        } else if(leftNumber instanceof Double || rightNumber instanceof Double) {
 
-            return left.doubleValue() * right.doubleValue();
+            return leftNumber.doubleValue() * rightNumber.doubleValue();
 
         }
 
-        return left.intValue() * right.intValue();
+        return leftNumber.intValue() * rightNumber.intValue();
 
     }
 
@@ -121,22 +131,31 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
 
         //Este metodo se ejecuta se quiere sumar/restar expresiones, en caso de que las expresiones sean otras
         //expresiones, se visita recursivamente hasta obtener el terminal numero, luego se opera
-        Number left = (Number) visit(ctx.expression(0));
-        Number right = (Number) visit(ctx.expression(1));
+        Object left = visit(ctx.expression(0));
+        Object right = visit(ctx.expression(1));
 
-        if(left instanceof Double || right instanceof Double) {
+        if( !(left instanceof Integer || left instanceof Double)
+                ||!(right instanceof Integer || right instanceof Double)
+        )
+            throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
+                    "ERROR: Operación invalida, los operandos deben ser numericos.");
+
+        Number leftNumber = (Number) left;
+        Number rightNumber = (Number) right;
+
+        if(leftNumber instanceof Double || right instanceof Double) {
 
             if(ctx.op.getType() == SimpleParser.PLUS) {
-                return left.doubleValue() + right.doubleValue();
+                return leftNumber.doubleValue() + rightNumber.doubleValue();
             } else {
-                return left.doubleValue() - right.doubleValue();
+                return leftNumber.doubleValue() - rightNumber.doubleValue();
             }
 
         }
 
-        if(ctx.op.getType() == SimpleParser.PLUS) return left.intValue() + right.intValue();
+        if(ctx.op.getType() == SimpleParser.PLUS) return leftNumber.intValue() + rightNumber.intValue();
 
-        return left.intValue() - right.intValue();
+        return leftNumber.intValue() - rightNumber.intValue();
 
     }
 

@@ -6,31 +6,34 @@ programa central {
     //Esto es un comentario ignorado por el interprete
 
 	x = (2+1)*3;
-	s = 2;
+    s = 2;
 
-	mostrar ( x / s );
-	//mostrar ( x + 1 );
-	//mostrar ( "soy Un Literal :]" );
-	//mostrar ( 2+6/2 );
+	mostrar ( x / s);
+	mostrar ( x + 1 );
+	mostrar ( "soy Un Literal :]" );
+	mostrar ( 2+6/2 );
 
-	//mostrar (verdadero && falso);
-	//mostrar (verdadero && verdadero);
+	mostrar (verdadero && falso);
+	mostrar (verdadero && verdadero);
 
-	//mostrar (falso || falso);
-	//mostrar (falso || verdadero);
-	//mostrar (verdadero || falso && falso);
+	mostrar (falso || falso);
+	mostrar (falso || verdadero);
+	mostrar (verdadero || falso && falso);
 
-	//mostrar (5/2);
-	//mostrar (5.1 * 2);
-	//mostrar (2 * 5);
-	//mostrar (4.4 - 3);
-	//mostrar (2 - 10.2);
+	mostrar (5/2);
+	mostrar (5.1 * 2);
+	mostrar (2 * 5);
+	mostrar (4.4 - 3);
+	mostrar (2 - 10.2);
     //mostrar p; //Lanza error variable sin declarar
-	//mostrar (6 < 4);
-	//mostrar (2.3 == 2.1);
+	mostrar (6 < 4);
+	mostrar (2.3 == 2.1);
 
 	//mostrar(falso && 2); //Lanza error de incompatibilidad de tipos
 	//mostrar(verdadero > 2); //Lanza error de incompatibilidad de tipos
+    //mostrar(39) //Lanza error de sintaxis invalida
+    //mostrar(29/false); //Lanza error de operacion invalida
+    //mostrar("hola" + 2); //Lanza error de operacion invalida
 
 	//variable z;
     //z = verdadero && 1; //Lanza error de incompatibilidad de tipos
