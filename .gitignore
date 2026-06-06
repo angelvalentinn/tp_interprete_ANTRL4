@@ -1,0 +1,25 @@
+# --- ARCHIVOS GENERADOS POR MAVEN ---
+target/
+*.jar
+*.war
+*.ear
+
+# --- ARCHIVOS GENERADOS POR ANTLR ---
+# Si usás un plugin que genera código en una carpeta temporal fuera de target
+gen/
+.antlr/
+
+# --- ARCHIVOS GENERADOS POR EL IDE (Eclipse / IntelliJ / VS Code) ---
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+*.iws
+.factorypath
+.metadata/
+bin/
+
+# --- ARCHIVOS DEL SISTEMA ---
+.DS_Store
+Thumbs.db
