@@ -12,10 +12,12 @@ programa central {
         mostrar (6);
         mostrar (7);
     };
-    mostrar "-----------------";
+
+    mostrar ("\n");
+
     variable i;
     para (i = 0; i < 5; i = i + 1) {
-        mostrar i;
+        mostrar (i);
     }
 
 	//variable x;

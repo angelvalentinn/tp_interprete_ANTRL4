@@ -86,9 +86,18 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
         if(res instanceof Boolean) {
             boolean valor = (Boolean) res;
             System.out.println(valor ? "verdadero" : "falso");
-        } else {
-            System.out.println(res);
 
+        } else if(res instanceof Integer || res instanceof Double || res instanceof Float) {
+            System.out.println(res);
+        } else {
+
+            String resWithoutquotation = res.toString().substring(1, res.toString().length() - 1);
+
+            if(resWithoutquotation.equals("\\n")) {
+                System.out.println();
+            } else {
+                System.out.println(resWithoutquotation);
+            }
         }
 
         return null;

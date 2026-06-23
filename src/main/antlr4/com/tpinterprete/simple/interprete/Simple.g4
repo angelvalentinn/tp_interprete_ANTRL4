@@ -6,7 +6,7 @@ program: PROGRAM ID BRACKET_OPEN sentence* BRACKET_CLOSE; //Nuestro simbolo inic
 sentence: var_decl | var_assign | print | conditional | for_stmt;
 var_decl: VAR ID SEMICOLON;
 var_assign: ID ASSIGN expression SEMICOLON;
-print: PRINT expression SEMICOLON;
+print: PRINT '(' expression ')' SEMICOLON;
 number: INTEGER | FLOATING;
 
 //----------- if ------------//
