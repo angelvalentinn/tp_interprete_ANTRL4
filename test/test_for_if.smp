@@ -3,7 +3,7 @@ programa test_for_if {
     variable i;
     variable j;
 
-    variable fila;
+    variable fila //Agregar ; sino tira error de sintaxis
     variable columna;
 
     fila = 4;
