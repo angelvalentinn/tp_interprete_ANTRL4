@@ -28,7 +28,7 @@ programa operaciones {
 
     mostrar(x > y); mostrar("\n");
     mostrar(z == 3); mostrar("\n");
-    mostrar( (y <= 2) || (z < 2) );
+    mostrar( (y < 2) && "hola" );
 
     mostrar("\n"); mostrar("-------------"); mostrar("\n");
 

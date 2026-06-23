@@ -12,7 +12,7 @@ programa test_for_if {
     para (i = 0; i < fila; i = i + 1) {
         para (j = 0; j < columna; j = j + 1) {
 
-            si(verdadero || falso) {
+            si(falso || falso) {
                 mostrar( (j/2) * 3 ); mostrar(" - ");
             } sino {
                 mostrar("hola");
