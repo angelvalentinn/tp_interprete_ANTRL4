@@ -1,0 +1,26 @@
+programa test_for_if {
+
+    variable i;
+    variable j;
+
+    variable fila;
+    variable columna;
+
+    fila = 4;
+    columna = 10;
+
+    para (i = 0; i < fila; i = i + 1) {
+        para (j = 0; j < columna; j = j + 1) {
+
+            si(verdadero && verdadero) {
+                mostrar( (j/2) * 3 ); mostrar(" - ");
+            } sino {
+                mostrar("hola");
+                //Nunca entra acá
+            }
+
+        }
+       mostrar ("\n");
+    }
+
+}

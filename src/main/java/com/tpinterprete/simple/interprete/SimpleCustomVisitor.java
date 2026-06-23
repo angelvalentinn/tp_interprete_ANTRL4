@@ -36,9 +36,6 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
         String currentType = typeTable.get(id);
         String valueType = getType(value);
 
-        if (currentType != null && !currentType.equals(valueType)){
-            throw new RuntimeException("[Linea: "+ ctx.getStart().getLine()+"] " + "ERROR: Incompatibilidad de tipos.");
-        }
 
         if(currentType==null){
             typeTable.put(id, valueType);
@@ -85,10 +82,10 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
 
         if(res instanceof Boolean) {
             boolean valor = (Boolean) res;
-            System.out.println(valor ? "verdadero" : "falso");
+            System.out.print(valor ? "verdadero" : "falso");
 
         } else if(res instanceof Integer || res instanceof Double || res instanceof Float) {
-            System.out.println(res);
+            System.out.print(res);
         } else {
 
             String resWithoutquotation = res.toString().substring(1, res.toString().length() - 1);
@@ -96,7 +93,7 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
             if(resWithoutquotation.equals("\\n")) {
                 System.out.println();
             } else {
-                System.out.println(resWithoutquotation);
+                System.out.print(resWithoutquotation);
             }
         }
 
@@ -120,18 +117,19 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
                     "ERROR: Operación invalida, el condicional debe resultar en verdadero o falso.");
         }
 
-        Integer tam = ctx.if_block().sentence().size();
+        Integer tamIf = ctx.if_block().sentence().size();
+        Integer tamElseIf = ctx.else_block().sentence().size();
 
         if(condition) {
 
-            for(int i=0; i<tam; i++) {
+            for(int i=0; i<tamIf; i++) {
                 visit( ctx.if_block().sentence(i) );
             }
 
         } else {
 
-            for(int i=0; i<tam; i++) {
-                visit( ctx.else_block().sentence(i) );
+            for (int i = 0; i < tamElseIf; i++) {
+                visit(ctx.else_block().sentence(i));
             }
 
         }
@@ -176,22 +174,6 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
         }
 
         return null;
-    }
-
-    @Override
-    public Object visitNot(SimpleParser.NotContext ctx) {
-        Object value = visit(ctx.expression());
-
-        if (value instanceof Boolean) {
-            return !(Boolean) value;
-        } else if (value.toString().equals("verdadero")) {
-            return "falso";
-        } else if (value.toString().equals("falso")) {
-            return "verdadero";
-        } else {
-            throw new RuntimeException("[Linea: " + ctx.getStart().getLine() + "] " +
-                    "ERROR: El operador NOT solo puede aplicarse a valores booleanos.");
-        }
     }
 
 
@@ -239,7 +221,7 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
         Number leftNumber = (Number) left;
         Number rightNumber = (Number) right;
 
-        if(rightNumber.doubleValue() == 0.0) throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
+        if(rightNumber.doubleValue() == 0.00) throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
                 "ERROR: Operación invalida, no se puede dividir por 0 o nulo.");
 
 
@@ -342,22 +324,44 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
 
     }
 
+
+    @Override
+    public Object visitNot(SimpleParser.NotContext ctx) {
+        Object value = visit(ctx.expression());
+
+        if (value instanceof Boolean) {
+            return !(Boolean) value;
+        } else if (value.toString().equals("verdadero")) {
+            return false;
+        } else if (value.toString().equals("falso")) {
+            return true;
+        } else {
+            throw new RuntimeException("[Linea: " + ctx.getStart().getLine() + "] " +
+                    "ERROR: El operador NOT solo puede aplicarse a valores booleanos.");
+        }
+    }
+
     @Override
     public Object visitAnd(SimpleParser.AndContext ctx) {
 
         Object left = visit(ctx.expression(0));
         Object right = visit(ctx.expression(1));
 
-        if(  !( left.toString().equals("verdadero") || left.toString().equals("falso") )
-                ||  !( right.toString().equals("verdadero") || right.toString().equals("falso") )
+        if(   ( !( left.toString().equals("verdadero") || left.toString().equals("falso") )
+                ||  !( right.toString().equals("verdadero") || right.toString().equals("falso") ) )
+                &&  !(left instanceof Boolean || right instanceof Boolean)
         )
             throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
                     "ERROR: No coinciden los tipos, los operandos deben ser lógicos.");
 
-        if (left.toString().equals("verdadero") && right.toString().equals("verdadero")) {
-            return "verdadero";
+        if (left.toString().equals("verdadero") && right.toString().equals("verdadero")
+            || (left.toString().equals("true") && right.toString().equals("true"))
+                || (left.toString().equals("true") && right.toString().equals("verdadero"))
+                || (left.toString().equals("verdadero") && right.toString().equals("true"))
+        ) {
+            return true;
         }
-        return "falso";
+        return false;
 
     }
 
@@ -367,19 +371,23 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
         Object left = visit(ctx.expression(0));
         Object right = visit(ctx.expression(1));
 
-        if(  !( left.toString().equals("verdadero") || left.toString().equals("falso") )
-                ||  !( right.toString().equals("verdadero") || right.toString().equals("falso") )
+        if(   ( !( left.toString().equals("verdadero") || left.toString().equals("falso") )
+                ||  !( right.toString().equals("verdadero") || right.toString().equals("falso") ) )
+                &&  !(left instanceof Boolean || right instanceof Boolean)
         )
             throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
                     "ERROR: No coinciden los tipos, los operandos deben ser lógicos.");
 
-        if(left.toString().equals("verdadero") || right.toString().equals("verdadero")) {
-            return "verdadero";
+        if(left.toString().equals("verdadero") || right.toString().equals("verdadero") ||
+                left.toString().equals("true") || right.toString().equals("true")
+        ) {
+            return true;
         }
 
-        return "falso";
+        return false;
 
     }
+
 
     @Override
     public Object visitParens(SimpleParser.ParensContext ctx) {

@@ -58,7 +58,7 @@ programa central {
 	//mostrar(falso && 2); //Lanza error de incompatibilidad de tipos
 	//mostrar(verdadero > 2); //Lanza error de incompatibilidad de tipos
     //mostrar(39) //Lanza error de sintaxis invalida
-    //mostrar(29/false); //Lanza error de operacion invalida
+    //mostrar(29/falso); //Lanza error de operacion invalida
     //mostrar("hola" + 2); //Lanza error de operacion invalida
 
 	//variable z;

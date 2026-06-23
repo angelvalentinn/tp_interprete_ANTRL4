@@ -1,0 +1,26 @@
+programa test_2 {
+
+        /*
+           Esto es
+           un comentario de multiple linea ignorado por el interprete
+        */
+
+    si(verdadero && (4 > 5)) {
+
+        mostrar(29/verdadero); //Tira error por operacion invalidad
+
+    } sino {
+        variable a;
+        variable b;
+        variable res;
+
+        a = verdadero;
+        b = (4+5) - 4;
+        //res = a && b; //Tira error por operacion invalida
+
+        //mostrar(xw); //Tira error por no declarar variable
+        mostrar(b / 2.6);
+    }
+
+    mostrar("\n");
+}

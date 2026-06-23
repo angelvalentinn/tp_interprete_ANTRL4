@@ -1,0 +1,40 @@
+programa operaciones {
+
+    variable a;
+    variable b;
+    variable resultado;
+
+    a = verdadero;
+    b = falso;
+
+    resultado  = a && b;
+
+    mostrar(resultado); mostrar("\n");
+
+    resultado  = b || verdadero;
+
+    mostrar(resultado);
+
+    mostrar("\n"); mostrar("-------------"); mostrar("\n");
+
+    //variable a; //Tira error por que la variable a, ya fue declarada
+    variable x;
+    variable y;
+    variable z;
+
+    x = 14;
+    y = 2;
+    z = 3;
+
+    mostrar(x > y); mostrar("\n");
+    mostrar(z == 3); mostrar("\n");
+    mostrar( (y < 2) || (z < 2) );
+
+    mostrar("\n"); mostrar("-------------"); mostrar("\n");
+
+    mostrar( 2.5 * 4.1 + 3 ); mostrar("\n");
+    mostrar(2 + 2 * 3);
+    //mostrar(234/0); //Tira error por division por 0
+
+    mostrar("\n");
+}
