@@ -11,7 +11,7 @@ public class Main {
 	private static final String EXTENSION = "smp";
 
 	public static void main(String[] args) throws IOException, ParseCancellationException {
-		String program = args.length > 1 ? args[1] : "test/test_for_if." + EXTENSION;
+		String program = args.length > 1 ? args[1] : "test/test_operaciones." + EXTENSION;
 
 		System.out.println("Interpreting file " + program);
 

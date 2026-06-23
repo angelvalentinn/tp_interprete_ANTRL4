@@ -349,7 +349,7 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
 
         if(   ( !( left.toString().equals("verdadero") || left.toString().equals("falso") )
                 ||  !( right.toString().equals("verdadero") || right.toString().equals("falso") ) )
-                &&  !(left instanceof Boolean || right instanceof Boolean)
+                ||  !(left instanceof Boolean || right instanceof Boolean)
         )
             throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
                     "ERROR: No coinciden los tipos, los operandos deben ser lógicos.");
@@ -373,7 +373,7 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
 
         if(   ( !( left.toString().equals("verdadero") || left.toString().equals("falso") )
                 ||  !( right.toString().equals("verdadero") || right.toString().equals("falso") ) )
-                &&  !(left instanceof Boolean || right instanceof Boolean)
+                ||  !(left instanceof Boolean || right instanceof Boolean)
         )
             throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
                     "ERROR: No coinciden los tipos, los operandos deben ser lógicos.");

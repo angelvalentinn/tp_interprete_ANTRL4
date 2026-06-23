@@ -3,7 +3,7 @@ programa test_for_if {
     variable i;
     variable j;
 
-    variable fila //Agregar ; sino tira error de sintaxis
+    variable fila; //Agregar ; sino tira error de sintaxis
     variable columna;
 
     fila = 4;
@@ -12,7 +12,7 @@ programa test_for_if {
     para (i = 0; i < fila; i = i + 1) {
         para (j = 0; j < columna; j = j + 1) {
 
-            si(verdadero && verdadero) {
+            si(verdadero || falso) {
                 mostrar( (j/2) * 3 ); mostrar(" - ");
             } sino {
                 mostrar("hola");
