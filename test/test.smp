@@ -2,15 +2,21 @@ programa central {
 
     variable x;
 
-    x=(3+2)*2;
+    x=3+2*2;
 
-    si(verdadero && falso) {
+
+    si(verdadero || falso) {
         mostrar (x);
         mostrar (2);
     } sino {
         mostrar (6);
         mostrar (7);
     };
+    mostrar "-----------------";
+    variable i;
+    para (i = 0; i < 5; i = i + 1) {
+        mostrar i;
+    }
 
 	//variable x;
 	//variable s;

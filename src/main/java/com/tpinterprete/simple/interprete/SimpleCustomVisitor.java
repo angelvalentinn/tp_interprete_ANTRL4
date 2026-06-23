@@ -1,11 +1,13 @@
 package com.tpinterprete.simple.interprete;
 
 import java.util.HashMap;
+import java.util.Map;
 
 //Clase donde se aplica la gramatica de atributos a cada nodo del arbol, usando la tabla de simbolos
 public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
 
     private HashMap<String, Object> symbolTable = new HashMap<String, Object>();
+    private Map<String, String> typeTable = new HashMap<>();
 
     @Override
     public Object visitVar_decl(SimpleParser.Var_declContext ctx) {
@@ -14,10 +16,10 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
             throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
                     "ERROR: Redeclaración de variable, estas intentando definir una variable ya definida.");
 
-        String variableName = ctx.ID().getText(); //Guardo el nombre de la variable
+        String variableName = ctx.ID().getText();
 
-        this.symbolTable.put(variableName, 0); //Lo guardo en la tabla de simbolos con valor 0 por defecto
-
+        this.symbolTable.put(variableName, 0);
+        this.typeTable.put(variableName, "entero");
         return null;
     }
 
@@ -31,6 +33,17 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
         String id = ctx.ID().getText();
         Object value = visit(ctx.expression());
 
+        String currentType = typeTable.get(id);
+        String valueType = getType(value);
+
+        if (currentType != null && !currentType.equals(valueType)){
+            throw new RuntimeException("[Linea: "+ ctx.getStart().getLine()+"] " + "ERROR: Incompatibilidad de tipos.");
+        }
+
+        if(currentType==null){
+            typeTable.put(id, valueType);
+        }
+
         symbolTable.put(id, value);
 
         return value;
@@ -38,9 +51,33 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitVar_assign_no_semicolon(SimpleParser.Var_assign_no_semicolonContext ctx) {
+        if(!symbolTable.containsKey(ctx.ID().getText()))
+            throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
+                    "ERROR: Declaración de variable, estas intentando asignar un valor a una variable no definida.");
+
+        String id = ctx.ID().getText();
+        Object value = visit(ctx.expression());
+
+        String currentType = typeTable.get(id);
+        String valueType = getType(value);
+
+        if (currentType != null && !currentType.equals(valueType)){
+            throw new RuntimeException("[Linea: "+ ctx.getStart().getLine()+"] " + "ERROR: Incompatibilidad de tipos.");
+        }
+
+        if(currentType==null){
+            typeTable.put(id, valueType);
+        }
+
+        symbolTable.put(id, value);
+
+        return value;
+    }
+
+    @Override
     public Object visitPrint(SimpleParser.PrintContext ctx) {
 
-        //Si recibe un NO terminal, se visita hasta que quede en un terminal
         Object res = visit(ctx.expression());
 
         if(res == null) throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
@@ -63,9 +100,13 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
         Object conditionObj = visit(ctx.expression());
         Boolean condition;
 
-        if(conditionObj.toString().equals("verdadero")) condition = true;
-        else if (conditionObj.toString().equals("falso")) condition = false;
-        else {
+        if (conditionObj instanceof Boolean) {
+            condition = (Boolean) conditionObj;
+        } else if (conditionObj.toString().equals("verdadero")) {
+            condition = true;
+        } else if (conditionObj.toString().equals("falso")) {
+            condition = false;
+        } else {
             throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
                     "ERROR: Operación invalida, el condicional debe resultar en verdadero o falso.");
         }
@@ -90,6 +131,60 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
 
     }
 
+    @Override
+    public Object visitFor_stmt(SimpleParser.For_stmtContext ctx) {
+
+        visit(ctx.for_init());
+
+        SimpleParser.For_conditionContext conditionCtx = ctx.for_condition();
+        SimpleParser.For_updateContext updateCtx = ctx.for_update();
+        SimpleParser.For_blockContext blockCtx = ctx.for_block();
+
+        while (true) {
+            Object conditionObj = visit(conditionCtx.expression());
+            Boolean condition;
+
+            if (conditionObj instanceof Boolean) {
+                condition = (Boolean) conditionObj;
+            } else if (conditionObj.toString().equals("verdadero")) {
+                condition = true;
+            } else if (conditionObj.toString().equals("falso")) {
+                condition = false;
+            } else {
+                throw new RuntimeException("[Linea: " + ctx.getStart().getLine() + "] " +
+                        "ERROR: La condición del for debe resultar en verdadero o falso.");
+            }
+
+            if (!condition) {
+                break;
+            }
+
+            for (int i = 0; i < blockCtx.sentence().size(); i++) {
+                visit(blockCtx.sentence(i));
+            }
+
+            visit(updateCtx);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Object visitNot(SimpleParser.NotContext ctx) {
+        Object value = visit(ctx.expression());
+
+        if (value instanceof Boolean) {
+            return !(Boolean) value;
+        } else if (value.toString().equals("verdadero")) {
+            return "falso";
+        } else if (value.toString().equals("falso")) {
+            return "verdadero";
+        } else {
+            throw new RuntimeException("[Linea: " + ctx.getStart().getLine() + "] " +
+                    "ERROR: El operador NOT solo puede aplicarse a valores booleanos.");
+        }
+    }
+
 
     @Override
     public Object visitId(SimpleParser.IdContext ctx) {
@@ -103,7 +198,6 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
     @Override
     public Object visitNumb(SimpleParser.NumbContext ctx) {
 
-        //Este metodo se ejecuta cuando se llega al final del arbol para obtener el float o int
         if(ctx.number().getText().contains(".")) {
             return Double.parseDouble(ctx.number().getText());
         }
@@ -112,13 +206,11 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
 
     @Override
     public Object visitStr(SimpleParser.StrContext ctx) {
-        //Este metodo se ejecuta cuando se llega al final del arbol para obtener el terminal STRING
         return ctx.STRING();
     }
 
     @Override
     public Object visitBool(SimpleParser.BoolContext ctx) {
-        //Este metodo se ejecuta cuando se llega al final del arbol para obtener el terminal BOOLEAN
         return ctx.BOOLEAN();
     }
 
@@ -126,14 +218,11 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
     @Override
     public Object visitMulDiv(SimpleParser.MulDivContext ctx) {
 
-        //Este metodo se ejecuta se quiere multiplicar/dividir expresiones, en caso de que las expresiones sean otras
-        //expresiones, se visita recursivamente hasta obtener el terminal numero, luego se opera
-
         Object left = visit(ctx.expression(0));
         Object right = visit(ctx.expression(1));
 
         if( !(left instanceof Integer || left instanceof Double)
-            ||!(right instanceof Integer || right instanceof Double)
+                ||!(right instanceof Integer || right instanceof Double)
         )
             throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
                     "ERROR: Operación invalida, los operandos deben ser numericos.");
@@ -162,8 +251,6 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
     @Override
     public Object visitAddSub(SimpleParser.AddSubContext ctx) {
 
-        //Este metodo se ejecuta se quiere sumar/restar expresiones, en caso de que las expresiones sean otras
-        //expresiones, se visita recursivamente hasta obtener el terminal numero, luego se opera
         Object left = visit(ctx.expression(0));
         Object right = visit(ctx.expression(1));
 
@@ -198,9 +285,25 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
         Object left = visit(ctx.expression(0));
         Object right = visit(ctx.expression(1));
 
+        if (left instanceof Boolean && right instanceof Boolean) {
+            boolean bLeft = (Boolean) left;
+            boolean bRight = (Boolean) right;
+
+            if(ctx.op.getType() == SimpleParser.EQ) return bLeft == bRight;
+            if(ctx.op.getType() == SimpleParser.NEQ) return bLeft != bRight;
+        }
+
+        if (left instanceof String && right instanceof String) {
+            String sLeft = (String) left;
+            String sRight = (String) right;
+
+            if(ctx.op.getType() == SimpleParser.EQ) return sLeft.equals(sRight);
+            if(ctx.op.getType() == SimpleParser.NEQ) return !sLeft.equals(sRight);
+        }
+
         if( !(left instanceof Double || left instanceof Integer)
-            || !(right instanceof Double || right instanceof Integer)
-        ) { //Si no son numeros lanzamos error
+                || !(right instanceof Double || right instanceof Integer)
+        ) {
             throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
                     "ERROR: No coinciden los tipos, los operandos deben ser numericos");
         }
@@ -256,7 +359,7 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
         Object right = visit(ctx.expression(1));
 
         if(  !( left.toString().equals("verdadero") || left.toString().equals("falso") )
-            ||  !( right.toString().equals("verdadero") || right.toString().equals("falso") )
+                ||  !( right.toString().equals("verdadero") || right.toString().equals("falso") )
         )
             throw new RuntimeException("[Linea: " + ctx.getStart().getLine()  + "] " +
                     "ERROR: No coinciden los tipos, los operandos deben ser lógicos.");
@@ -271,8 +374,15 @@ public class SimpleCustomVisitor extends SimpleBaseVisitor<Object> {
 
     @Override
     public Object visitParens(SimpleParser.ParensContext ctx) {
-        //Se resuelve lo de adentro del parentesis, se visita a la expresion hasta que quede en un terminal numero
         return visit(ctx.expression());
+    }
+
+    private String getType(Object obj) {
+        if (obj instanceof Integer) return "entero";
+        if (obj instanceof Double) return "real";
+        if (obj instanceof Boolean) return "booleano";
+        if (obj instanceof String) return "string";
+        return "desconocido";
     }
 
 }

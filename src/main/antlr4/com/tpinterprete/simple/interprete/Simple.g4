@@ -3,20 +3,33 @@ grammar Simple;
 //------------- Gramatica libre de contexto (VT, S, P) -------------
 
 program: PROGRAM ID BRACKET_OPEN sentence* BRACKET_CLOSE; //Nuestro simbolo inicial
-sentence: var_decl | var_assign | print | conditional;
+sentence: var_decl | var_assign | print | conditional | for_stmt;
 var_decl: VAR ID SEMICOLON;
 var_assign: ID ASSIGN expression SEMICOLON;
 print: PRINT expression SEMICOLON;
 number: INTEGER | FLOATING;
+
+//----------- if ------------//
 conditional: IF PAR_OPEN expression PAR_CLOSE
     BRACKET_OPEN if_block BRACKET_CLOSE
     ELSE  BRACKET_OPEN else_block BRACKET_CLOSE SEMICOLON?;
 if_block: sentence*;
 else_block: sentence*;
 
+//----------- for ------------//
+for_stmt: FOR PAR_OPEN for_init SEMICOLON for_condition SEMICOLON for_update PAR_CLOSE
+          BRACKET_OPEN for_block BRACKET_CLOSE;
+for_init: var_decl | var_assign_no_semicolon;
+for_condition: expression;
+for_update: var_assign_no_semicolon;
+for_block: sentence*;
+
+var_assign_no_semicolon: ID ASSIGN expression;
+
 expression : expression op=(MULT | DIV) expression   # MulDiv //Esta manera respeta la presedencia matematica, dejando que la mult/div
            | expression op=(PLUS | MINUS) expression # AddSub //quede en los niveles mas bajos del arbol asegurando que se operen primero
            | expression op=(GT | LT | GEQ | LEQ | EQ | NEQ) expression # Comp
+           | NOT expression                          #Not
            | expression op=AND expression            # And
            | expression op=OR expression             # Or
            | number                                  # numb
@@ -33,6 +46,7 @@ VAR: 'variable';
 PRINT: 'mostrar';
 IF: 'si';
 ELSE: 'sino';
+FOR: 'para';
 
 PLUS: '+';
 MINUS: '-';
