@@ -2,6 +2,8 @@
 
 Trabajo práctico universitario en el que se implementó un intérprete para un lenguaje de programación simple utilizando ANTLR4 y Java.
 
+Link al video de la defensa de 5 minutos explicando el funcionamiento del programa: [https://youtu.be/0SG_uWRWYDo](https://youtu.be/0SG_uWRWYDo)
+
 ## Integrantes del grupo
 | Nombre | Apellido|
 | --- | --- |
